@@ -6,11 +6,24 @@ class CustomString {
   static CustomString getInstance() {
     return _ourInstance;
   }
-  String get mainAppbarTitle => "Flutter State Manager";
 
-  String get blocBtnTitle => "Bloc";
-
-  String get confirmTitle => "Confirm";
-
-  String get detailTitle => "Detail";
+  Map<String, String> selectLanguage(String selectedLanguage) {
+    switch (selectedLanguage) {
+      case "فارسی":
+        {
+          return  {
+            'appbar_splashscreen': 'خوش آمدید',
+            'appbar_introduction': 'معرفی',
+          };
+        }
+        break;
+      default:
+        {
+          return  {
+            'appbar_splashscreen': 'Wellcome',
+            'appbar_introduction': 'Introduction',
+          };
+        }
+    }
+  }
 }

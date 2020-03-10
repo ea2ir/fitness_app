@@ -2,43 +2,53 @@ import 'package:flutter/material.dart';
 
 class AppThemes {
   AppThemes._();
+
   static final AppThemes _ourInstance = new AppThemes._();
 
   static AppThemes getInstance() {
     return _ourInstance;
   }
 
-  ThemeData indexOfTheme(int index) {
-    var selectedTheme;
-
-    switch (index) {
+  ThemeData indexOfTheme(int _index) {
+    var _selectedTheme;
+    switch (_index) {
       case (1):
         {
-          selectedTheme = new ThemeData(
+          _selectedTheme = new ThemeData(
             /// A color that contrasts with the [primaryColor], e.g. used as the
             /// remaining part of a progress bar.
             backgroundColor: Colors.blue,
+
             /// The foreground color for widgets (knobs, text, overscroll edge effect, etc).
             accentColor: Colors.pinkAccent,
+
             /// The background color for major parts of the app (toolbars, tab bars, etc).
             primaryColor: Colors.blue,
+
             /// A lighter version of the [primaryColor].
             primaryColorLight: Colors.blue[400],
+
             /// A darker version of the [primaryColor].
             primaryColorDark: Colors.blue[800],
+
             /// background color for a typical material app or a page within the app.
             scaffoldBackgroundColor: Colors.white,
+
             /// The background color of [Dialog] elements.
             dialogBackgroundColor: Colors.white,
+
             /// The color of cursors in Material-style text fields, such as [TextField].
             cursorColor: Colors.pinkAccent,
+
             /// The color of [Divider]s and [PopupMenuDivider]s, also used
             /// between [ListTile]s, between rows in [DataTable]s, and so forth.
             dividerColor: Colors.grey[700],
+
             /// The color used for widgets that are inoperative, regardless of
             /// their state. For example, a disabled checkbox (which may be
             /// checked or unchecked).
             disabledColor: Colors.grey,
+
             /// The color of ink splashes. See [InkWell].
             splashColor: Colors.blueGrey[700],
           );
@@ -46,7 +56,7 @@ class AppThemes {
         break;
       case (2):
         {
-          selectedTheme = new ThemeData(
+          _selectedTheme = new ThemeData(
             backgroundColor: Colors.green[700],
             accentColor: Colors.deepPurple[900],
             primaryColor: Colors.green[700],
@@ -63,7 +73,7 @@ class AppThemes {
         break;
       case (3):
         {
-          selectedTheme = new ThemeData(
+          _selectedTheme = new ThemeData(
             backgroundColor: Colors.red,
             accentColor: Colors.brown[600],
             primaryColor: Colors.red,
@@ -80,7 +90,7 @@ class AppThemes {
         break;
       default:
         {
-          selectedTheme = new ThemeData(
+          _selectedTheme = new ThemeData(
             backgroundColor: Colors.yellow[700],
             accentColor: Colors.lightBlue[900],
             primaryColor: Colors.yellow[700],
@@ -96,6 +106,6 @@ class AppThemes {
         }
     }
 
-    return selectedTheme;
+    return _selectedTheme;
   }
 }

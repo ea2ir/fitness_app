@@ -6,20 +6,21 @@ import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
   final int _selectedTheme = 0;
-  final String _title = CustomString
-      .getInstance()
-      .blocBtnTitle;
+  final String _selectedLanguage = "";
+
 
   @override
   Widget build(BuildContext context) {
     ThemeData _customTheme = AppThemes.getInstance().indexOfTheme(_selectedTheme);
+    Map<String , String> _customLanguage =  CustomString.getInstance().selectLanguage(_selectedLanguage);
+
     delayTime(context);
     return MaterialApp(
-      title: _title,
+      title: _customLanguage['appbar_introduction'],
       theme: _customTheme,
       home: Scaffold(
         appBar:
-        CustomWidget.getInstance().mainAppBarWidget(_title, _customTheme),
+        CustomWidget.getInstance().mainAppBarWidget(_customLanguage['appbar_introduction'], _customTheme),
         body: Center(
           child: Text(
             'Wellcome !',
@@ -31,8 +32,8 @@ class SplashScreen extends StatelessWidget {
   }
 
   Future navigatorPages(BuildContext context) async {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => SelectLanguage()));
+//    Navigator.push(
+//        context, MaterialPageRoute(builder: (context) => SelectLanguage()));
   }
 
   Future delayTime(BuildContext context) async {

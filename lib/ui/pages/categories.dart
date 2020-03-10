@@ -5,17 +5,20 @@ import 'package:flutter/material.dart';
 
 class Categories extends StatelessWidget {
   final int _selectedTheme = 0;
-  final String _title = CustomString.getInstance().blocBtnTitle;
+  final String _selectedLanguage = "";
+
 
   @override
   Widget build(BuildContext context) {
     ThemeData _customTheme = AppThemes.getInstance().indexOfTheme(_selectedTheme);
+    Map<String , String> _customLanguage =  CustomString.getInstance().selectLanguage(_selectedLanguage);
+
     return MaterialApp(
-      title: _title,
+      title: _customLanguage['appbar_introduction'],
       theme: _customTheme,
       home: Scaffold(
         appBar:
-        CustomWidget.getInstance().mainAppBarWidget(_title, _customTheme),
+        CustomWidget.getInstance().mainAppBarWidget(_customLanguage['appbar_introduction'], _customTheme),
         body: Center(
           child: Text(
             'CATEGORIES :',
