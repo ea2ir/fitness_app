@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:fitnessapp/models/languages.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -16,6 +17,7 @@ class DbHelper {
   }
 
   static Database _dbExist;
+  static const String _TBL_LANGUAGES = "languages";
 
   Future<Database> get db async {
     if (_dbExist != null) {
@@ -58,5 +60,17 @@ class DbHelper {
   Future get closeDB async {
     print('Database is Close.');
     return _dbExist.close;
+  }
+
+  Future<List<Languages>> getLanguageData() async {
+    var dbClient = await _dbExist;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_LANGUAGES");
+    List<Languages> languages = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; ++i) {
+        languages.add(Languages.fromMap(maps[i]));
+      }
+    }
+    return languages;
   }
 }
