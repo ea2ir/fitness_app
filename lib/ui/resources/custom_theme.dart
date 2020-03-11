@@ -9,10 +9,10 @@ class AppThemes {
     return _ourInstance;
   }
 
-  ThemeData indexOfTheme(int _index) {
+  ThemeData indexOfTheme(String _index) {
     var _selectedTheme;
     switch (_index) {
-      case (1):
+      case ("1"):
         {
           _selectedTheme = new ThemeData(
             /// A color that contrasts with the [primaryColor], e.g. used as the
@@ -54,7 +54,7 @@ class AppThemes {
           );
         }
         break;
-      case (2):
+      case ("2"):
         {
           _selectedTheme = new ThemeData(
             backgroundColor: Colors.green[700],
@@ -71,7 +71,7 @@ class AppThemes {
           );
         }
         break;
-      case (3):
+      case ("3"):
         {
           _selectedTheme = new ThemeData(
             backgroundColor: Colors.red,

@@ -1,5 +1,5 @@
 class Languages {
-  int id_lang;
+  String id_lang;
   String lang_name;
   String lang_type;
 
@@ -14,7 +14,7 @@ class Languages {
     return map;
   }
   Languages.fromMap(Map<String , dynamic>map){
-    id_lang = map['id_lang'];
+    id_lang = map['id_lang'].toString();
     lang_name = map['lang_name'];
     lang_type = map['lang_type'];
   }

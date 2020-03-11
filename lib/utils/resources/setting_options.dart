@@ -6,13 +6,13 @@ class SettingOptions {
   static SettingOptions getInstance() {
     return _ourInstance;
   }
-  Map<String, String> _settings;
+  Map<String, String> settings;
 
   Map<String, String> loadSettings() {
-    return _settings;
+    return settings;
   }
 
   void saveSettings(Map<String, String> customSettings) {
-    this._settings = customSettings;
+    this.settings = customSettings;
   }
 }

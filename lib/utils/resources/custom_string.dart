@@ -14,6 +14,9 @@ class CustomString {
           return  {
             'appbar_splashscreen': 'خوش آمدید',
             'appbar_introduction': 'معرفی',
+            'appbar_selectLanguage': 'انتخاب زبان',
+            'appbar_selectTheme': 'انتخاب تم',
+            'appbar_categories': 'دسته بندی',
           };
         }
         break;
@@ -22,6 +25,9 @@ class CustomString {
           return  {
             'appbar_splashscreen': 'Wellcome',
             'appbar_introduction': 'Introduction',
+            'appbar_selectLanguage': 'Select Language',
+            'appbar_selectTheme': 'Select Theme',
+            'appbar_categories': 'Categories',
           };
         }
     }

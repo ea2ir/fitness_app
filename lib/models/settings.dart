@@ -1,6 +1,6 @@
 class Settings {
   String lang_name;
-  int id_theme;
+  String id_theme;
   String lang_type;
 
   Settings(this.lang_name, this.id_theme, this.lang_type);
@@ -15,8 +15,9 @@ class Settings {
   }
   Settings.fromMap(Map<String , dynamic>map){
     lang_name = map['lang_name'];
-    id_theme = map['id_theme'];
+    id_theme = map['id_theme'].toString();
     lang_type = map['lang_type'];
   }
+
 
 }

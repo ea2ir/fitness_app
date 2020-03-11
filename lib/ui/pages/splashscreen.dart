@@ -9,14 +9,13 @@ import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
-  int _selectedTheme;
+  String _selectedTheme;
   String _selectedLanguage;
   String _languageType;
 
   @override
   Widget build(BuildContext context) {
-    DbHelper.getInstance().db;
-    delayTime(context);
+    databaseActions(context);
 
     ThemeData _customTheme =
         AppThemes.getInstance().indexOfTheme(_selectedTheme);
@@ -26,13 +25,15 @@ class SplashScreen extends StatelessWidget {
     return MaterialApp(
       title: _customLanguage['appbar_introduction'],
       theme: _customTheme,
-      home: Scaffold(
-        appBar: CustomWidget.getInstance().mainAppBarWidget(
-            _customLanguage['appbar_introduction'], _customTheme),
-        body: Center(
-          child: Text(
-            'Wellcome !',
-            style: TextStyle(fontSize: 30.0, color: _customTheme.accentColor),
+      home: Directionality( textDirection:(_languageType == "RTL" ? TextDirection.rtl : TextDirection.ltr),
+        child: Scaffold(
+          appBar: CustomWidget.getInstance().mainAppBarWidget(
+              _customLanguage['appbar_introduction'], _customTheme),
+          body: Center(
+            child: Text(
+              'Wellcome !',
+              style: TextStyle(fontSize: 30.0, color: _customTheme.accentColor),
+            ),
           ),
         ),
       ),
@@ -43,25 +44,27 @@ class SplashScreen extends StatelessWidget {
 
     SettingOptions.getInstance().saveSettings({'id_theme':'$_selectedTheme','lang_name':'$_selectedLanguage','lang_type':'$_languageType'});
 
-    if (_selectedTheme > -1) {
-     Navigator.push(
+    if (_selectedTheme != "-1") {
+     Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => Categories()));
     } else {
-      Navigator.push(
+      Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => SelectLanguage()));
     }
   }
 
   Future delayTime(BuildContext context) async {
-    await databaseActions();
     await new Future.delayed(const Duration(seconds: 3));
-    navigatorPages(context);
+    await navigatorPages(context);
   }
 
-  Future databaseActions() async {
+  Future databaseActions(BuildContext context) async {
+    await DbHelper.getInstance().db;
     await DbHelper.getInstance().openDB;
     await checkSettings();
     await DbHelper.getInstance().closeDB;
+    delayTime(context);
+
   }
 
   Future checkSettings() async {
