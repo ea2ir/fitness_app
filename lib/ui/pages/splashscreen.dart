@@ -1,26 +1,34 @@
+import 'package:fitnessapp/models/settings.dart';
+import 'package:fitnessapp/ui/pages/categories.dart';
 import 'package:fitnessapp/ui/pages/select_language.dart';
 import 'package:fitnessapp/ui/resources/custom_theme.dart';
 import 'package:fitnessapp/ui/resources/custom_widget.dart';
+import 'package:fitnessapp/utils/db/db_helper.dart';
 import 'package:fitnessapp/utils/resources/custom_string.dart';
+import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
-  final int _selectedTheme = 0;
-  final String _selectedLanguage = "";
-
+  int _selectedTheme;
+  String _selectedLanguage;
+  String _languageType;
 
   @override
   Widget build(BuildContext context) {
-    ThemeData _customTheme = AppThemes.getInstance().indexOfTheme(_selectedTheme);
-    Map<String , String> _customLanguage =  CustomString.getInstance().selectLanguage(_selectedLanguage);
-
+    DbHelper.getInstance().db;
     delayTime(context);
+
+    ThemeData _customTheme =
+        AppThemes.getInstance().indexOfTheme(_selectedTheme);
+    Map<String, String> _customLanguage =
+        CustomString.getInstance().selectLanguage(_selectedLanguage);
+
     return MaterialApp(
       title: _customLanguage['appbar_introduction'],
       theme: _customTheme,
       home: Scaffold(
-        appBar:
-        CustomWidget.getInstance().mainAppBarWidget(_customLanguage['appbar_introduction'], _customTheme),
+        appBar: CustomWidget.getInstance().mainAppBarWidget(
+            _customLanguage['appbar_introduction'], _customTheme),
         body: Center(
           child: Text(
             'Wellcome !',
@@ -32,12 +40,35 @@ class SplashScreen extends StatelessWidget {
   }
 
   Future navigatorPages(BuildContext context) async {
-//    Navigator.push(
-//        context, MaterialPageRoute(builder: (context) => SelectLanguage()));
+
+    SettingOptions.getInstance().saveSettings({'id_theme':'$_selectedTheme','lang_name':'$_selectedLanguage','lang_type':'$_languageType'});
+
+    if (_selectedTheme > -1) {
+     Navigator.push(
+          context, MaterialPageRoute(builder: (context) => Categories()));
+    } else {
+      Navigator.push(
+          context, MaterialPageRoute(builder: (context) => SelectLanguage()));
+    }
   }
 
   Future delayTime(BuildContext context) async {
+    await databaseActions();
     await new Future.delayed(const Duration(seconds: 3));
     navigatorPages(context);
+  }
+
+  Future databaseActions() async {
+    await DbHelper.getInstance().openDB;
+    await checkSettings();
+    await DbHelper.getInstance().closeDB;
+  }
+
+  Future checkSettings() async {
+    List<Settings> _settings;
+    _settings = await DbHelper.getInstance().getSettingsData();
+    _selectedLanguage = _settings[0].lang_name;
+    _selectedTheme = _settings[0].id_theme;
+    _languageType = _settings[0].lang_type;
   }
 }

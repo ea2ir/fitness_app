@@ -4,6 +4,7 @@ import 'package:fitnessapp/utils/resources/custom_string.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatelessWidget {
+
   final int _selectedTheme = 0;
   final String _selectedLanguage = "";
 
