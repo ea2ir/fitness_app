@@ -39,9 +39,4 @@ class Categories extends StatelessWidget {
       ),
     );
   }
-
-//  Future navigatorPages(BuildContext context) async {
-//    Navigator.push(
-//        context, MaterialPageRoute(builder: (context) => Categories()));
-//  }
 }

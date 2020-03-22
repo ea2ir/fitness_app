@@ -101,7 +101,7 @@ class AppThemes {
             cursorColor: Colors.lightBlue[900],
             dividerColor: Colors.grey,
             disabledColor: Colors.grey,
-            splashColor: Colors.deepOrangeAccent[700],
+            splashColor: Colors.orange[100],
           );
         }
     }

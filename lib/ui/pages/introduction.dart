@@ -21,6 +21,8 @@ class Introduction extends StatelessWidget {
     Map<String, String> _customLanguage =
         CustomString.getInstance().selectLanguage(_selectedLanguage);
 
+    Future.delayed(const Duration(seconds: 3),(){navigatorPages(context);});
+
     return MaterialApp(
       title: _customLanguage['appbar_introduction'],
       theme: _customTheme,
@@ -42,7 +44,7 @@ class Introduction extends StatelessWidget {
   }
 
   Future navigatorPages(BuildContext context) async {
-    Navigator.push(
+    Navigator.pushReplacement(
         context, MaterialPageRoute(builder: (context) => SelectTheme()));
   }
 }

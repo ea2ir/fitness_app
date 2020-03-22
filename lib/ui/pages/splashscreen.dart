@@ -23,12 +23,12 @@ class SplashScreen extends StatelessWidget {
         CustomString.getInstance().selectLanguage(_selectedLanguage);
 
     return MaterialApp(
-      title: _customLanguage['appbar_introduction'],
+      title: _customLanguage['appbar_splashscreen'],
       theme: _customTheme,
       home: Directionality( textDirection:(_languageType == "RTL" ? TextDirection.rtl : TextDirection.ltr),
         child: Scaffold(
           appBar: CustomWidget.getInstance().mainAppBarWidget(
-              _customLanguage['appbar_introduction'], _customTheme),
+              _customLanguage['appbar_splashscreen'], _customTheme),
           body: Center(
             child: Text(
               'Wellcome !',
@@ -53,18 +53,12 @@ class SplashScreen extends StatelessWidget {
     }
   }
 
-  Future delayTime(BuildContext context) async {
-    await new Future.delayed(const Duration(seconds: 3));
-    await navigatorPages(context);
-  }
-
   Future databaseActions(BuildContext context) async {
     await DbHelper.getInstance().db;
     await DbHelper.getInstance().openDB;
     await checkSettings();
     await DbHelper.getInstance().closeDB;
-    delayTime(context);
-
+    await new Future.delayed(const Duration(seconds: 3),(){navigatorPages(context);});
   }
 
   Future checkSettings() async {

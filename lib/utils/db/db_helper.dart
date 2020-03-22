@@ -87,4 +87,14 @@ class DbHelper {
     }
     return settings;
   }
+  Future<int> updateSettings(Settings setting) async {
+    var dbClient = await _dbExist;
+
+    return await dbClient.update(
+      _TBL_SETTINGS,
+      setting.toMap(),
+      where: "id_setting = ?",
+      whereArgs: [setting.id_setting],
+    );
+  }
 }
