@@ -6,9 +6,11 @@ import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class Categories extends StatelessWidget {
+  Settings _settingOptions;
+
   @override
   Widget build(BuildContext context) {
-    Settings _settingOptions =
+    _settingOptions =
         Settings.fromMap(SettingOptions.getInstance().loadSettings());
 
     String _selectedTheme = _settingOptions.id_theme;
@@ -19,6 +21,8 @@ class Categories extends StatelessWidget {
         AppThemes.getInstance().indexOfTheme(_selectedTheme);
     Map<String, String> _customLanguage =
         CustomString.getInstance().selectLanguage(_selectedLanguage);
+
+
 
     return MaterialApp(
       title: _customLanguage['appbar_categories'],

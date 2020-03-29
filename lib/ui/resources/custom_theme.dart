@@ -57,23 +57,6 @@ class AppThemes {
       case ("2"):
         {
           _selectedTheme = new ThemeData(
-            backgroundColor: Colors.green[700],
-            accentColor: Colors.deepPurple[900],
-            primaryColor: Colors.green[700],
-            primaryColorLight: Colors.green[400],
-            primaryColorDark: Colors.green[900],
-            scaffoldBackgroundColor: Colors.white,
-            dialogBackgroundColor: Colors.white,
-            cursorColor: Colors.deepPurple[900],
-            dividerColor: Colors.grey[700],
-            disabledColor: Colors.grey,
-            splashColor: Colors.blueGrey[700],
-          );
-        }
-        break;
-      case ("3"):
-        {
-          _selectedTheme = new ThemeData(
             backgroundColor: Colors.red,
             accentColor: Colors.brown[600],
             primaryColor: Colors.red,
@@ -88,6 +71,24 @@ class AppThemes {
           );
         }
         break;
+      case ("3"):
+        {
+          _selectedTheme = new ThemeData(
+            backgroundColor: Colors.green[700],
+            accentColor: Colors.deepPurple[900],
+            primaryColor: Colors.green[700],
+            primaryColorLight: Colors.green[400],
+            primaryColorDark: Colors.green[900],
+            scaffoldBackgroundColor: Colors.white,
+            dialogBackgroundColor: Colors.white,
+            cursorColor: Colors.deepPurple[900],
+            dividerColor: Colors.grey[700],
+            disabledColor: Colors.grey,
+            splashColor: Colors.blueGrey[700],
+          );
+        }
+        break;
+
       default:
         {
           _selectedTheme = new ThemeData(

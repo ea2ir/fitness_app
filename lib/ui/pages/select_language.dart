@@ -22,11 +22,6 @@ class _SelectLanguageState extends State<SelectLanguage> {
 
   @override
   Widget build(BuildContext context) {
-//    openDb();
-//    checkLanguages();
-//    closeDb();
-
-
 
     _settingOptions =
         Settings.fromMap(SettingOptions.getInstance().loadSettings());
@@ -40,9 +35,6 @@ class _SelectLanguageState extends State<SelectLanguage> {
     Map<String, String> _customLanguage =
         CustomString.getInstance().selectLanguage(_selectedLanguage);
 
-//    Future.delayed(const Duration(seconds: 7), () {
-//      navigatorPages(context);
-//    });
 
     return MaterialApp(
       title: _customLanguage['appbar_selectLanguage'],
@@ -73,14 +65,14 @@ class _SelectLanguageState extends State<SelectLanguage> {
                       title: RaisedButton(
                         color: _customTheme.primaryColor,
                         splashColor: _customTheme.splashColor,
-                        onPressed: () {
-                          changeLanguage(
+                        onPressed: () async{
+                          await changeLanguage(
                             item_name,
                             _selectedTheme,
                             item_type,
                           );
-                          closeDb();
-                          navigatorPages(context);
+                          await closeDb();
+                          await navigatorPages(context);
                         },
                         child: Text(
                           item_name,
@@ -130,20 +122,19 @@ class _SelectLanguageState extends State<SelectLanguage> {
     _postsController.add(_lang);
   }
 
-  void closeDb() async {
+  closeDb() async {
     await DbHelper.getInstance().closeDB;
 
   }
 
   changeLanguage(
     item_name,
-    _selectedTheme,
+    _mySelectedTheme,
     item_type,
   ) async {
     Settings _settings =
-        new Settings("1", item_name, _selectedTheme, item_type);
+        new Settings("1", item_name, _mySelectedTheme, item_type);
     await DbHelper.getInstance().updateSettings(_settings);
-    SettingOptions.getInstance().saveSettings({'id_theme':'$_selectedTheme','lang_name':'$item_name','lang_type':'$item_type'});
-
+    SettingOptions.getInstance().saveSettings({'id_theme':'$_mySelectedTheme','lang_name':'$item_name','lang_type':'$item_type',});
   }
 }

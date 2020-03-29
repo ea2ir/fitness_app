@@ -46,9 +46,9 @@ class DbHelper {
         await Directory(dirname(_path)).create(recursive: true);
       } catch (_) {}
       ByteData _data =
-          await rootBundle.load(join('assets', 'db', 'main_database.db'));
+      await rootBundle.load(join('assets', 'db', 'main_database.db'));
       List<int> _byte =
-          _data.buffer.asUint8List(_data.offsetInBytes, _data.lengthInBytes);
+      _data.buffer.asUint8List(_data.offsetInBytes, _data.lengthInBytes);
       await File(_path).writeAsBytes(_byte, flush: true);
     }
   }
