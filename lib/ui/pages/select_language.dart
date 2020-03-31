@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
-import 'package:fitnessapp/ui/pages/introduction.dart';
+import 'package:fitnessapp/ui/pages/select_theme.dart';
 import 'package:fitnessapp/ui/resources/custom_theme.dart';
 import 'package:fitnessapp/ui/resources/custom_widget.dart';
 import 'package:fitnessapp/utils/db/db_helper.dart';
@@ -10,131 +10,101 @@ import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class SelectLanguage extends StatefulWidget {
-  @override
-  _SelectLanguageState createState() => _SelectLanguageState();
-}
-
-class _SelectLanguageState extends State<SelectLanguage> {
-  List<Languages> _lang = [];
-  StreamController _postsController = new StreamController();
-  Settings _settingOptions;
+class SelectLanguage extends StatelessWidget {
+  Settings _settingOptions =
+  Settings.fromMap(SettingOptions.getInstance().loadSettings());
+  Future<List<Languages>> listOfCategories = languagesList();
 
   @override
   Widget build(BuildContext context) {
-
-    _settingOptions =
-        Settings.fromMap(SettingOptions.getInstance().loadSettings());
-
-    String _selectedTheme = _settingOptions.id_theme;
-    String _selectedLanguage = _settingOptions.lang_name;
+    String _themeId = _settingOptions.id_theme;
+    String _languageName = _settingOptions.lang_name;
     String _languageType = _settingOptions.lang_type;
+    String _languageId = _settingOptions.id_lang;
+    String _themeName = _settingOptions.theme_name;
 
-    ThemeData _customTheme =
-        AppThemes.getInstance().indexOfTheme(_selectedTheme);
+    ThemeData _customTheme = AppThemes.getInstance().indexOfTheme(_themeId);
     Map<String, String> _customLanguage =
-        CustomString.getInstance().selectLanguage(_selectedLanguage);
-
+    CustomString.getInstance().selectLanguage(_languageName);
 
     return MaterialApp(
       title: _customLanguage['appbar_selectLanguage'],
       theme: _customTheme,
       home: Directionality(
         textDirection:
-            (_languageType == "RTL" ? TextDirection.rtl : TextDirection.ltr),
+        (_languageType == "RTL" ? TextDirection.rtl : TextDirection.ltr),
         child: Scaffold(
           appBar: CustomWidget.getInstance().mainAppBarWidget(
               _customLanguage['appbar_selectLanguage'], _customTheme),
-          body: StreamBuilder(
-            stream: _postsController.stream,
-            builder: (BuildContext context, AsyncSnapshot snapshot) {
-              if (snapshot.hasError) {
-                return Text(
-                  "ERROR",
-                  style: TextStyle(fontSize: 30.0, color: Colors.redAccent),
-                );
-              } else if (snapshot.hasData) {
-                return ListView.builder(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  itemCount: snapshot.data.length,
-                  itemBuilder: (context, index) {
-                    var item_name = snapshot.data[index].lang_name;
-                    var item_type = snapshot.data[index].lang_type;
-
-                    return ListTile(
-                      title: RaisedButton(
-                        color: _customTheme.primaryColor,
-                        splashColor: _customTheme.splashColor,
-                        onPressed: () async{
-                          await changeLanguage(
-                            item_name,
-                            _selectedTheme,
-                            item_type,
-                          );
-                          await closeDb();
-                          await navigatorPages(context);
-                        },
-                        child: Text(
-                          item_name,
-                          style: TextStyle(fontWeight: FontWeight.w700),
-                        ),
-                      ),
-                    );
-                  },
-                );
-              } else {
-                return Container(
-                  color: Colors.redAccent,
-                );
-              }
+          body: FutureBuilder<List<Languages>>(
+            future: listOfCategories,
+            builder: (context, snapshot) {
+              List<Languages> list = snapshot.data ?? [];
+              return ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  Languages item = list[index];
+                  return new ListTile(
+                    leading: RaisedButton(
+                      child: Text(item.lang_name),
+                      color: _customTheme.primaryColor,
+                      splashColor: _customTheme.splashColor,
+                      onPressed: () async {
+                        await changeLanguage(
+                          item.lang_name,
+                          _themeId,
+                          item.lang_type,
+                          item.id_lang,
+                          _themeName,
+                        );
+                        await navigatorPages(context);
+                      },
+                    ),
+                  );
+                },
+              );
             },
           ),
         ),
       ),
     );
   }
+}
 
-  @override
-  void initState() {
-    super.initState();
-    openDb();
-    checkLanguages();
-  }
+changeLanguage(
+    _languageName,
+    _themeId,
+    _languageType,
+    _languageId,
+    _themeName,
+    ) async {
+  Settings _settings = new Settings(
+      "1", _languageName, _themeId, _languageType, _languageId, _themeName);
+  await DbHelper.getInstance().updateSettings(_settings);
+  SettingOptions.getInstance().saveSettings({
+    'lang_name': '$_languageName',
+    'id_theme': '$_themeId',
+    'lang_type': '$_languageType',
+    'id_lang': '$_languageId',
+    'theme_name': '$_themeName',
+  });
+}
 
-  @override
-  void dispose() {
-    super.dispose();
-    _postsController.close();
-    closeDb();
-  }
+openDb() async {
+  await DbHelper.getInstance().openDB;
+}
 
-  Future navigatorPages(BuildContext context) async {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => Introduction()));
-  }
+closeDb() async {
+  await DbHelper.getInstance().closeDB;
+}
 
-  openDb() async {
-    await DbHelper.getInstance().openDB;
-  }
+Future<List<Languages>> languagesList() async {
+  await openDb();
+  return await DbHelper.getInstance().getLanguageData();
+}
 
-  checkLanguages() async {
-    _lang = await DbHelper.getInstance().getLanguageData();
-    _postsController.add(_lang);
-  }
-
-  closeDb() async {
-    await DbHelper.getInstance().closeDB;
-
-  }
-
-  changeLanguage(
-    item_name,
-    _mySelectedTheme,
-    item_type,
-  ) async {
-    Settings _settings =
-        new Settings("1", item_name, _mySelectedTheme, item_type);
-    await DbHelper.getInstance().updateSettings(_settings);
-    SettingOptions.getInstance().saveSettings({'id_theme':'$_mySelectedTheme','lang_name':'$item_name','lang_type':'$item_type',});
-  }
+Future navigatorPages(BuildContext context) async {
+  await closeDb();
+  Navigator.pushReplacement(
+      context, MaterialPageRoute(builder: (context) => SelectTheme()));
 }

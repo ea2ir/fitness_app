@@ -1,7 +1,8 @@
 import 'dart:io';
-
+import 'package:fitnessapp/models/categories.dart';
 import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
+import 'package:fitnessapp/models/themes.dart';
 import 'package:flutter/services.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -20,6 +21,8 @@ class DbHelper {
   static Database _dbExist;
   static const String _TBL_LANGUAGES = "languages";
   static const String _TBL_SETTINGS = "settings";
+  static const String _TBL_CATEGORIES = "categories";
+  static const String _TBL_THEMES = "themes";
 
   Future<Database> get db async {
     if (_dbExist != null) {
@@ -95,6 +98,39 @@ class DbHelper {
       setting.toMap(),
       where: "id_setting = ?",
       whereArgs: [setting.id_setting],
+    );
+  }
+  Future<List<Categories>> getCategoriesData(String _selectedLanguageId) async {
+    var dbClient = await _dbExist;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_CATEGORIES WHERE id_lang=$_selectedLanguageId");
+    List<Categories> _categories = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; ++i) {
+        _categories.add(Categories.fromMap(maps[i]));
+      }
+    }
+    return _categories;
+  }
+
+  Future<List<Themes>> getThemesData(String _selectedLanguageId) async {
+    var dbClient = await _dbExist;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_THEMES WHERE id_lang=$_selectedLanguageId");
+    List<Themes> themes = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; ++i) {
+        themes.add(Themes.fromMap(maps[i]));
+      }
+    }
+    return themes;
+  }
+  Future<int> updateThemes(Themes themes) async {
+    var dbClient = await _dbExist;
+
+    return await dbClient.update(
+      _TBL_THEMES,
+      themes.toMap(),
+      where: "id_theme = ?",
+      whereArgs: [themes.id_theme],
     );
   }
 }

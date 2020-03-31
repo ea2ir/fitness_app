@@ -1,18 +1,19 @@
+import 'package:fitnessapp/models/categories.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/ui/resources/custom_theme.dart';
 import 'package:fitnessapp/ui/resources/custom_widget.dart';
+import 'package:fitnessapp/utils/db/db_helper.dart';
 import 'package:fitnessapp/utils/resources/custom_string.dart';
 import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
-class Categories extends StatelessWidget {
-  Settings _settingOptions;
+class CategoriesList extends StatelessWidget {
+  Settings _settingOptions =
+      Settings.fromMap(SettingOptions.getInstance().loadSettings());
+  Future<List<Categories>> listOfCategories = categoriesList();
 
   @override
   Widget build(BuildContext context) {
-    _settingOptions =
-        Settings.fromMap(SettingOptions.getInstance().loadSettings());
-
     String _selectedTheme = _settingOptions.id_theme;
     String _selectedLanguage = _settingOptions.lang_name;
     String _languageType = _settingOptions.lang_type;
@@ -21,8 +22,6 @@ class Categories extends StatelessWidget {
         AppThemes.getInstance().indexOfTheme(_selectedTheme);
     Map<String, String> _customLanguage =
         CustomString.getInstance().selectLanguage(_selectedLanguage);
-
-
 
     return MaterialApp(
       title: _customLanguage['appbar_categories'],
@@ -33,14 +32,29 @@ class Categories extends StatelessWidget {
         child: Scaffold(
           appBar: CustomWidget.getInstance().mainAppBarWidget(
               _customLanguage['appbar_categories'], _customTheme),
-          body: Center(
-            child: Text(
-              _customLanguage['appbar_categories'],
-              style: TextStyle(fontSize: 30.0, color: _customTheme.accentColor),
-            ),
+          body: FutureBuilder<List<Categories>>(
+            future: listOfCategories,
+            builder: (context, snapshot) {
+              List<Categories> list = snapshot.data ?? [];
+              return ListView.builder(
+                itemCount: list.length,
+                itemBuilder: (context, index) {
+                  Categories item = list[index];
+                  return new ListTile(
+                    leading: Text(item.cat_name),
+                  );
+                },
+              );
+            },
           ),
         ),
       ),
     );
   }
+}
+
+Future<List<Categories>> categoriesList() async {
+  Settings _settingOptions =
+  Settings.fromMap(SettingOptions.getInstance().loadSettings());
+  return await DbHelper.getInstance().getCategoriesData(_settingOptions.id_lang);
 }

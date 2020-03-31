@@ -1,52 +1,55 @@
 import 'package:fitnessapp/models/settings.dart';
-import 'package:fitnessapp/ui/pages/categories.dart';
+import 'package:fitnessapp/ui/pages/categories_list.dart';
 import 'package:fitnessapp/ui/pages/select_language.dart';
 import 'package:fitnessapp/ui/resources/custom_theme.dart';
-import 'package:fitnessapp/ui/resources/custom_widget.dart';
 import 'package:fitnessapp/utils/db/db_helper.dart';
 import 'package:fitnessapp/utils/resources/custom_string.dart';
 import 'package:fitnessapp/utils/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
-  String _selectedTheme;
-  String _selectedLanguage;
+  String _themeId;
+  String _languageName;
   String _languageType;
+  String _languageId;
+  String _themeName;
 
   @override
   Widget build(BuildContext context) {
     databaseActions(context);
 
-    ThemeData _customTheme =
-        AppThemes.getInstance().indexOfTheme(_selectedTheme);
-    Map<String, String> _customLanguage =
-        CustomString.getInstance().selectLanguage(_selectedLanguage);
+    ThemeData _customTheme;
+    Map<String, String> _customLanguage;
+
 
     return MaterialApp(
-      title: _customLanguage['appbar_splashscreen'],
-      theme: _customTheme,
-      home: Directionality( textDirection:(_languageType == "RTL" ? TextDirection.rtl : TextDirection.ltr),
-        child: Scaffold(
-          appBar: CustomWidget.getInstance().mainAppBarWidget(
-              _customLanguage['appbar_splashscreen'], _customTheme),
-          body: Center(
+      home: Scaffold(
+        body: Container(
+          color: _customTheme.primaryColor,
+          child: Center(
             child: Text(
-              'Wellcome !',
+              _customLanguage['appbar_splashscreen'],
               style: TextStyle(fontSize: 30.0, color: _customTheme.accentColor),
             ),
           ),
         ),
       ),
+      theme: _customTheme,
     );
   }
 
   Future navigatorPages(BuildContext context) async {
+    SettingOptions.getInstance().saveSettings({
+      'lang_name': '$_languageName',
+      'id_theme': '$_themeId',
+      'lang_type': '$_languageType',
+      'id_lang': '$_languageId',
+      'theme_name': '$_themeName',
+    });
 
-    SettingOptions.getInstance().saveSettings({'id_theme':'$_selectedTheme','lang_name':'$_selectedLanguage','lang_type':'$_languageType'});
-
-    if (_selectedTheme != "-1") {
-     Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => Categories()));
+    if (_themeId != "-1") {
+      Navigator.pushReplacement(
+          context, MaterialPageRoute(builder: (context) => CategoriesList()));
     } else {
       Navigator.pushReplacement(
           context, MaterialPageRoute(builder: (context) => SelectLanguage()));
@@ -58,14 +61,19 @@ class SplashScreen extends StatelessWidget {
     await DbHelper.getInstance().openDB;
     await checkSettings();
     await DbHelper.getInstance().closeDB;
-    await new Future.delayed(const Duration(seconds: 3),(){navigatorPages(context);});
+    await new Future.delayed(const Duration(seconds: 3), () {
+      navigatorPages(context);
+    });
   }
 
   Future checkSettings() async {
     List<Settings> _settings;
     _settings = await DbHelper.getInstance().getSettingsData();
-    _selectedLanguage = _settings[0].lang_name;
-    _selectedTheme = _settings[0].id_theme;
+    _languageName = _settings[0].lang_name;
+    _themeId = _settings[0].id_theme;
     _languageType = _settings[0].lang_type;
+    _languageId = _settings[0].id_lang;
+    _themeName = _settings[0].theme_name;
+
   }
 }
