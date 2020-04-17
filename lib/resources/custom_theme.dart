@@ -59,13 +59,13 @@ class AppThemes {
 
           _selectedTheme = new ThemeData(
             backgroundColor: Colors.blue,
-            accentColor: Colors.pinkAccent,
+            accentColor: Colors.deepPurple,
             primaryColor: Colors.blue,
             primaryColorLight: Colors.blue[400],
             primaryColorDark: Colors.blue[800],
             scaffoldBackgroundColor: Colors.white,
             dialogBackgroundColor: Colors.white,
-            cursorColor: Colors.pinkAccent,
+            cursorColor: Colors.deepPurple,
             dividerColor: Colors.grey[700],
             disabledColor: Colors.grey,
             splashColor: Colors.blueGrey[700],

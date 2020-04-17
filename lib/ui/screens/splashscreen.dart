@@ -1,8 +1,9 @@
+import 'package:fitnessapp/db/db_helper.dart';
 import 'package:fitnessapp/models/settings.dart';
+import 'package:fitnessapp/resources/custom_string.dart';
+import 'package:fitnessapp/resources/setting_options.dart';
 import 'package:fitnessapp/ui/screens/categories_list.dart';
 import 'package:fitnessapp/ui/screens/select_language.dart';
-import 'package:fitnessapp/db/db_helper.dart';
-import 'package:fitnessapp/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -16,37 +17,28 @@ class SplashScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     databaseActions(context);
 
-    ThemeData _customTheme;
-    Map<String, String> _customLanguage;
+    ThemeData _customTheme = Theme.of(context);
+    Map<String, String> _customLanguage =
+    CustomString.getInstance().selectLanguage("");
 
-
-    return MaterialApp(
-      home: Scaffold(
-        body: Container(
-          color: _customTheme.primaryColor,
-          child: Center(
-            child: Text(
-              _customLanguage['appbar_splashscreen'],
-              style: TextStyle(fontSize: 30.0, color: _customTheme.accentColor),
-            ),
+    return Scaffold(
+      body: Container(
+        color: _customTheme.primaryColor,
+        child: Center(
+          child: Text(
+            _customLanguage['appbar_splashscreen'],
+            style: TextStyle(fontSize: 30.0, color: _customTheme.primaryColorDark),
           ),
         ),
       ),
-      theme: _customTheme,
     );
   }
 
   Future navigatorPages(BuildContext context) async {
-    SettingOptions.getInstance().saveSettings({
-      'lang_name': '$_languageName',
-      'id_theme': '$_themeId',
-      'lang_type': '$_languageType',
-      'id_lang': '$_languageId',
-      'theme_name': '$_themeName',
-    });
 
     if (_themeId != "-1") {
       Navigator.pushReplacement(
+
           context, MaterialPageRoute(builder: (context) => CategoriesList()));
     } else {
       Navigator.pushReplacement(
@@ -56,13 +48,21 @@ class SplashScreen extends StatelessWidget {
 
   Future databaseActions(BuildContext context) async {
     await DbHelper.getInstance().db;
-    await DbHelper.getInstance().openDB;
+    await openDb();
     await checkSettings();
-    await DbHelper.getInstance().closeDB;
-    await new Future.delayed(const Duration(seconds: 3), () {
+    await new Future.delayed(const Duration(seconds: 3), () async {
+      SettingOptions.getInstance().saveSettings({
+        'lang_name': '$_languageName',
+        'id_theme': '$_themeId',
+        'lang_type': '$_languageType',
+        'id_lang': '$_languageId',
+        'theme_name': '$_themeName',
+      });
       navigatorPages(context);
+      await closeDb();
     });
   }
+
 
   Future checkSettings() async {
     List<Settings> _settings;
@@ -72,6 +72,12 @@ class SplashScreen extends StatelessWidget {
     _languageType = _settings[0].lang_type;
     _languageId = _settings[0].id_lang;
     _themeName = _settings[0].theme_name;
-
   }
+}
+openDb() async {
+  await DbHelper.getInstance().openDB;
+}
+
+closeDb() async {
+  await DbHelper.getInstance().closeDB;
 }
