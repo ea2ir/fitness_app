@@ -1,12 +1,12 @@
 import 'dart:async';
 import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
-import 'package:fitnessapp/ui/pages/select_theme.dart';
-import 'package:fitnessapp/ui/resources/custom_theme.dart';
-import 'package:fitnessapp/ui/resources/custom_widget.dart';
-import 'package:fitnessapp/utils/db/db_helper.dart';
-import 'package:fitnessapp/utils/resources/custom_string.dart';
-import 'package:fitnessapp/utils/resources/setting_options.dart';
+import 'package:fitnessapp/ui/screens/select_theme.dart';
+import 'package:fitnessapp/resources/custom_theme.dart';
+import 'package:fitnessapp/resources/custom_widget.dart';
+import 'package:fitnessapp/db/db_helper.dart';
+import 'package:fitnessapp/resources/custom_string.dart';
+import 'package:fitnessapp/resources/setting_options.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 

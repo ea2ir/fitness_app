@@ -1,6 +1,5 @@
-import 'package:fitnessapp/ui/pages/select_theme.dart';
+import 'package:fitnessapp/ui/screens/select_theme.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 
 class Introduction extends StatelessWidget {
 //  Map<String, String> _customLanguage;

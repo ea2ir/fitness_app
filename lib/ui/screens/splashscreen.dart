@@ -1,10 +1,8 @@
 import 'package:fitnessapp/models/settings.dart';
-import 'package:fitnessapp/ui/pages/categories_list.dart';
-import 'package:fitnessapp/ui/pages/select_language.dart';
-import 'package:fitnessapp/ui/resources/custom_theme.dart';
-import 'package:fitnessapp/utils/db/db_helper.dart';
-import 'package:fitnessapp/utils/resources/custom_string.dart';
-import 'package:fitnessapp/utils/resources/setting_options.dart';
+import 'package:fitnessapp/ui/screens/categories_list.dart';
+import 'package:fitnessapp/ui/screens/select_language.dart';
+import 'package:fitnessapp/db/db_helper.dart';
+import 'package:fitnessapp/resources/setting_options.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatelessWidget {
