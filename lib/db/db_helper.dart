@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fitnessapp/models/categories.dart';
+import 'package:fitnessapp/models/exercises.dart';
 import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/models/themes.dart';
@@ -23,6 +24,8 @@ class DbHelper {
   static const String _TBL_SETTINGS = "settings";
   static const String _TBL_CATEGORIES = "categories";
   static const String _TBL_THEMES = "themes";
+  static const String _TBL_EXERCISES = "exercises";
+
 
   Future<Database> get db async {
     if (_dbExist != null) {
@@ -99,9 +102,9 @@ class DbHelper {
       whereArgs: [setting.id_setting],
     );
   }
-  Future<List<Categories>> getCategoriesData(String _selectedLanguageId) async {
+  Future<List<Categories>> getCategoriesData(String _selectedCategoriesId) async {
     var dbClient = await _dbExist;
-    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_CATEGORIES WHERE id_lang=$_selectedLanguageId");
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_CATEGORIES WHERE id_lang=$_selectedCategoriesId");
     List<Categories> _categories = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; ++i) {
@@ -111,6 +114,17 @@ class DbHelper {
     return _categories;
   }
 
+  Future<List<Excercises>> getExcercisesData(String _selectedExcercisesId , String _selectedCatId) async {
+    var dbClient = await _dbExist;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_EXERCISES WHERE id_lang=$_selectedExcercisesId AND id_cat=$_selectedCatId");
+    List<Excercises> _excercises = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; ++i) {
+        _excercises.add(Excercises.fromMap(maps[i]));
+      }
+    }
+    return _excercises;
+  }
   Future<List<Themes>> getThemesData(String _selectedLanguageId) async {
     var dbClient = await _dbExist;
     List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_THEMES WHERE id_lang=$_selectedLanguageId");

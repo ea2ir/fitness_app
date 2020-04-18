@@ -1,8 +1,10 @@
 import 'package:fitnessapp/db/db_helper.dart';
 import 'package:fitnessapp/models/categories.dart';
 import 'package:fitnessapp/models/settings.dart';
+import 'package:fitnessapp/resources/category_sigleton.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
 import 'package:fitnessapp/resources/setting_options.dart';
+import 'package:fitnessapp/ui/screens/exercises_list.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -29,8 +31,8 @@ class CategoriesList extends StatelessWidget {
               title: Container(
                 child: Text(_customLanguage['text_are_you_sure'],
                     textDirection: _settingOptions.lang_type == "RTL"
-                    ? TextDirection.rtl
-                    : TextDirection.ltr),
+                        ? TextDirection.rtl
+                        : TextDirection.ltr),
               ),
               content: Text(_customLanguage['text_you_want_exit'],
                   textDirection: _settingOptions.lang_type == "RTL"
@@ -39,11 +41,11 @@ class CategoriesList extends StatelessWidget {
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.of(_context).pop(false),
-                  child: Text(_customLanguage['text_no']),
+                  child: Text(_customLanguage['text_no'],style: TextStyle(color:Colors.redAccent),),
                 ),
                 FlatButton(
                   onPressed: () => Navigator.of(_context).pop(true),
-                  child: Text(_customLanguage['text_yes']),
+                  child: Text(_customLanguage['text_yes'],style: TextStyle(color: Colors.green),),
                 ),
               ],
             ),
@@ -75,7 +77,12 @@ class CategoriesList extends StatelessWidget {
                       children: <Widget>[
                         Expanded(
                           child: InkWell(
-                            onTap: () {},
+                            onTap: () {
+                              CategorySingleton.getInstance().saveCatId(
+                                list[index].id_cat,
+                              );
+                              navigatorPages(context);
+                            },
                             child: Row(
                               children: <Widget>[
                                 Padding(
@@ -83,11 +90,11 @@ class CategoriesList extends StatelessWidget {
                                       top: 4.0, start: 8.0, end: 8.0),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: Colors.yellow,
+                                      color: Theme.of(context).primaryColor,
                                       shape: BoxShape.circle,
                                       image: DecorationImage(
                                           image: ExactAssetImage(
-                                            "assets/images/introduction/photo_1.jpg",
+                                            "assets/images/cat_list/cat-$index.png",
                                           ),
                                           fit: BoxFit.cover),
                                     ),
@@ -147,3 +154,7 @@ Future<List<Categories>> categoriesList() async {
   await closeDb();
   return _listOfCategories;
 }
+void navigatorPages(context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => ExcercisesList()));
+  }
