@@ -92,7 +92,6 @@ class DbHelper {
   }
   Future<int> updateSettings(Settings setting) async {
     var dbClient = await _dbExist;
-
     return await dbClient.update(
       _TBL_SETTINGS,
       setting.toMap(),

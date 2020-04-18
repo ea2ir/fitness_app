@@ -9,8 +9,9 @@ part 'theme_event.dart';
 part 'theme_state.dart';
 
 class ThemeBloc extends Bloc<ThemeEvent, ThemeState> {
+  int defaultValue=0;
   @override
-  ThemeState get initialState => ThemeInitial(appThemeData[AppTheme.Default]);
+  ThemeState get initialState => ThemeInitial(appThemeData[AppTheme.values[defaultValue]]);
 
   @override
   Stream<ThemeState> mapEventToState(

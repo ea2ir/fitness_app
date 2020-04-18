@@ -15,7 +15,7 @@ class AppPage extends StatelessWidget {
   }
 
   Widget _buildWithTheme(BuildContext context, ThemeState state) {
-    return MaterialApp(
+    return MaterialApp(color: Colors.black,
       theme: state.themeData,
       home: SplashScreen(),
     );

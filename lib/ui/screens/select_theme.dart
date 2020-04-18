@@ -20,9 +20,6 @@ class SelectTheme extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String _themeSelectedID = _settingOptions.id_theme;
-    String _themeSelectedName = _settingOptions.theme_name;
-
     Map<String, String> _customLanguage =
         CustomString.getInstance().selectLanguage(_settingOptions.lang_name);
 
@@ -39,10 +36,10 @@ class SelectTheme extends StatelessWidget {
               onPressed: () async {
                 await changeTheme(
                   _settingOptions.lang_name,
-                  _themeSelectedID,
+                  _settingOptions.id_theme,
                   _settingOptions.lang_type,
                   _settingOptions.id_lang,
-                  _themeSelectedName,
+                  _settingOptions.theme_name,
                 );
                 await navigatorPages(context);
               },
@@ -68,8 +65,13 @@ class SelectTheme extends StatelessWidget {
                         style: appThemeData[itemAppTheme].textTheme.body1,
                       ),
                       onTap: () {
-                        _themeSelectedID = _list[index].id_theme;
-                        _themeSelectedName = _list[index].theme_name;
+                        SettingOptions.getInstance().saveSettings({
+                          'lang_name': '${_settingOptions.lang_name}',
+                          'id_theme': '${_list[index].id_theme}',
+                          'lang_type': '${_settingOptions.lang_type}',
+                          'id_lang': '${_settingOptions.id_lang}',
+                          'theme_name': '${_list[index].theme_name}',
+                        });
                         BlocProvider.of<ThemeBloc>(context)
                             .add(ThemeChanged(theme: itemAppTheme));
                       }),
@@ -102,13 +104,7 @@ changeTheme(
   Settings _settings = new Settings(
       "1", _languageName, _themeId, _languageType, _languageId, _themeName);
   await DbHelper.getInstance().updateSettings(_settings);
-  SettingOptions.getInstance().saveSettings({
-    'lang_name': '$_languageName',
-    'id_theme': '$_themeId',
-    'lang_type': '$_languageType',
-    'id_lang': '$_languageId',
-    'theme_name': '$_themeName',
-  });
+
   await closeDb();
 }
 
