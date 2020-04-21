@@ -85,13 +85,6 @@ class SelectTheme extends StatelessWidget {
   }
 }
 
-openDb() async {
-  await DbHelper.getInstance().openDB;
-}
-
-closeDb() async {
-  await DbHelper.getInstance().closeDB;
-}
 
 changeTheme(
   _languageName,
@@ -100,12 +93,9 @@ changeTheme(
   _languageId,
   _themeName,
 ) async {
-  await openDb();
   Settings _settings = new Settings(
       "1", _languageName, _themeId, _languageType, _languageId, _themeName);
   await DbHelper.getInstance().updateSettings(_settings);
-
-  await closeDb();
 }
 
 Future navigatorPages(BuildContext context) async {

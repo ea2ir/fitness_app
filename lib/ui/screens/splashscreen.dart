@@ -37,7 +37,7 @@ class SplashScreen extends StatelessWidget {
 
   Future databaseActions(context) async {
     await DbHelper.getInstance().db;
-    await openDb();
+    await DbHelper.getInstance().openDB;
     await checkSettings(context);
     await navigatorPages(context);
   }
@@ -120,12 +120,4 @@ void detectAndSetTheme(_context, _themeId) {
             .add(ThemeChanged(theme: AppTheme.values[5]));
       }
   }
-}
-
-openDb() async {
-  await DbHelper.getInstance().openDB;
-}
-
-closeDb() async {
-  await DbHelper.getInstance().closeDB;
 }

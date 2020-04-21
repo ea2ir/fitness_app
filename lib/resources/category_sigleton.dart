@@ -6,13 +6,13 @@ class CategorySingleton {
   static CategorySingleton getInstance() {
     return _ourInstance;
   }
-  String catId;
+  String _catId;
 
   String loadCatId() {
-    return catId;
+    return _catId;
   }
 
   void saveCatId(String categorySingleton) {
-    this.catId = categorySingleton;
+    this._catId = categorySingleton;
   }
 }

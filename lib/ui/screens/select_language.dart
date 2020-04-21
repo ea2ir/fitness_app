@@ -81,16 +81,7 @@ changeLanguage(
   });
 }
 
-openDb() async {
-  await DbHelper.getInstance().openDB;
-}
-
-closeDb() async {
-  await DbHelper.getInstance().closeDB;
-}
-
 Future<List<Languages>> languagesList() async {
-  await openDb();
   return await DbHelper.getInstance().getLanguageData();
 }
 
@@ -109,6 +100,5 @@ Future<List<Themes>> themesList() async {
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
   List<Themes> _listOfThemes =
       await DbHelper.getInstance().getThemesData(_settingOptions.id_lang);
-  await closeDb();
   return _listOfThemes;
 }

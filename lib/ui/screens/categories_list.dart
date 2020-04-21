@@ -137,24 +137,14 @@ class CategoriesList extends StatelessWidget {
   }
 }
 
-openDb() async {
-  await DbHelper.getInstance().openDB;
-}
-
-closeDb() async {
-  await DbHelper.getInstance().closeDB;
-}
-
 Future<List<Categories>> categoriesList() async {
-  await openDb();
   Settings _settingOptions =
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
   List<Categories> _listOfCategories =
       await DbHelper.getInstance().getCategoriesData(_settingOptions.id_lang);
-  await closeDb();
   return _listOfCategories;
 }
 void navigatorPages(context) {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ExcercisesList()));
+        context, MaterialPageRoute(builder: (context) => ExercisesList()));
   }

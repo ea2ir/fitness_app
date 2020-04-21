@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:fitnessapp/models/categories.dart';
+import 'package:fitnessapp/models/exercise_item.dart';
 import 'package:fitnessapp/models/exercises.dart';
 import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
@@ -114,16 +115,27 @@ class DbHelper {
     return _categories;
   }
 
-  Future<List<Excercises>> getExcercisesData(String _selectedExcercisesId , String _selectedCatId) async {
+  Future<List<Exercises>> getExercisesData(String _selectedExercisesId , String _selectedCatId) async {
     var dbClient = await _dbExist;
-    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_EXERCISES WHERE id_lang=$_selectedExcercisesId AND id_cat=$_selectedCatId");
-    List<Excercises> _excercises = [];
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_EXERCISES WHERE id_lang=$_selectedExercisesId AND id_cat=$_selectedCatId");
+    List<Exercises> _exercises = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; ++i) {
-        _excercises.add(Excercises.fromMap(maps[i]));
+        _exercises.add(Exercises.fromMap(maps[i]));
       }
     }
-    return _excercises;
+    return _exercises;
+  }
+  Future<List<ExerciseItem>> getExerciseItem(String _id_lang , String _selectedExerciseId) async {
+    var dbClient = await _dbExist;
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_EXERCISES WHERE id_lang=$_id_lang AND id_exercise=$_selectedExerciseId");
+    List<ExerciseItem> _exerciseItem = [];
+    if (maps.length > 0) {
+      for (int i = 0; i < maps.length; ++i) {
+        _exerciseItem.add(ExerciseItem.fromMap(maps[i]));
+      }
+    }
+    return _exerciseItem;
   }
   Future<List<Themes>> getThemesData(String _selectedLanguageId) async {
     var dbClient = await _dbExist;

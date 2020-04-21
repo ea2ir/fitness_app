@@ -1,11 +1,11 @@
-class Excercises {
+class Exercises {
   String id;
   String exercise_name;
   String id_lang;
   String id_cat;
   String id_exercise;
 
-  Excercises(this.id,this.exercise_name, this.id_lang,this.id_cat, this.id_exercise);
+  Exercises(this.id,this.exercise_name, this.id_lang,this.id_cat, this.id_exercise,);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -17,13 +17,11 @@ class Excercises {
     };
     return map;
   }
-  Excercises.fromMap(Map<String , dynamic>map){
+  Exercises.fromMap(Map<String , dynamic>map){
     id = map['id'].toString();
     exercise_name = map['exercise_name'];
     id_lang = map['id_lang'].toString();
     id_cat = map['id_cat'].toString();
     id_exercise = map['id_exercise'].toString();
   }
-
-
 }

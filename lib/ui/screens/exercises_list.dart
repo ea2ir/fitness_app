@@ -1,18 +1,19 @@
 import 'package:fitnessapp/db/db_helper.dart';
+import 'package:fitnessapp/models/exercise_item.dart';
 import 'package:fitnessapp/models/exercises.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/resources/category_sigleton.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
 import 'package:fitnessapp/resources/setting_options.dart';
+import 'package:fitnessapp/ui/screens/exercise_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class ExcercisesList extends StatelessWidget {
+class ExercisesList extends StatelessWidget {
   Settings _settingOptions =
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
-  String _catID = CategorySingleton.getInstance().catId;
 
-  Future<List<Excercises>> listOfExcercises = excercisesList();
+  Future<List<Exercises>> listOfExercises = exercisesList();
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +31,25 @@ class ExcercisesList extends StatelessWidget {
           : TextDirection.ltr),
       child: Scaffold(
         appBar: AppBar(
-          title: Text(_customLanguage['appbar_categories']),
+          title: Text(_customLanguage['appbar_exercise_list']),
         ),
-        body: FutureBuilder<List<Excercises>>(
-          future: listOfExcercises,
+        body: FutureBuilder<List<Exercises>>(
+          future: listOfExercises,
           builder: (context, snapshot) {
-            List<Excercises> list = snapshot.data ?? [];
+            List<Exercises> list = snapshot.data ?? [];
             return ListView.builder(
               itemCount: list.length,
               itemBuilder: (context, _index) {
-                Excercises item = list[_index];
+                Exercises item = list[_index];
                 return Container(
                   height: customImageSize,
                   child: Column(
                     children: <Widget>[
                       Expanded(
                         child: InkWell(
-                          onTap: () {},
+                          onTap: () async {
+                         await navigatorPages(context,await exerciseItem(item.id_lang,item.id_exercise) );
+                          },
                           child: Row(
                             children: <Widget>[
                               Padding(
@@ -58,7 +61,7 @@ class ExcercisesList extends StatelessWidget {
                                     shape: BoxShape.circle,
                                     image: DecorationImage(
                                         image: ExactAssetImage(
-                                          "assets/images/excercises/excercise-${item.id_exercise}-1.png",
+                                          "assets/images/exercises/exercise-${item.id_exercise}-1.png",
                                         ),
                                         fit: BoxFit.cover),
                                   ),
@@ -66,10 +69,14 @@ class ExcercisesList extends StatelessWidget {
                                   height: customImageSize,
                                 ),
                               ),
-                              Text(
-                                item.exercise_name,
-                                style:
-                                    TextStyle(fontSize: customImageSize / 6),
+                              Expanded(
+                                child: Text(
+                                  item.exercise_name,
+                                  textAlign: TextAlign.start,
+                                  maxLines: 2,
+                                  style:
+                                  TextStyle(fontSize: customImageSize / 6),
+                                ),
                               ),
                               Spacer(),
                               Icon(Icons.arrow_forward_ios),
@@ -100,23 +107,21 @@ class ExcercisesList extends StatelessWidget {
   }
 }
 
-Future<List<Excercises>> excercisesList() async {
-  await openDb();
+Future<List<Exercises>> exercisesList() async {
   Settings _settingOptions =
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
-  String _catID = CategorySingleton.getInstance().catId;
+  String _catID = CategorySingleton.getInstance().loadCatId();
 
-  List<Excercises> _listOfExcercises = await DbHelper.getInstance()
-      .getExcercisesData(_settingOptions.id_lang, _catID);
-
-  await closeDb();
-  return _listOfExcercises;
+  List<Exercises> _listOfExercises = await DbHelper.getInstance()
+      .getExercisesData(_settingOptions.id_lang, _catID);
+  return _listOfExercises;
 }
-
-openDb() async {
-  await DbHelper.getInstance().openDB;
+Future<List<ExerciseItem>> exerciseItem(String _IdLang,String _SelectedExerciseId) async {
+  List<ExerciseItem> _listOfExercises = await DbHelper.getInstance()
+      .getExerciseItem(_IdLang, _SelectedExerciseId);
+  return _listOfExercises;
 }
-
-closeDb() async {
-  await DbHelper.getInstance().closeDB;
+Future<void> navigatorPages(context ,List<ExerciseItem> _selectedExercise) {
+  Navigator.push(
+      context, MaterialPageRoute(builder: (context) => ExercisePage(selectedExercise: _selectedExercise)));
 }
