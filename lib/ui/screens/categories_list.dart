@@ -1,5 +1,6 @@
 import 'package:fitnessapp/db/db_helper.dart';
 import 'package:fitnessapp/models/categories.dart';
+import 'package:fitnessapp/models/exercises.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/resources/category_sigleton.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
@@ -9,9 +10,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class CategoriesList extends StatelessWidget {
+  final List<Categories> listOfCategories;
+
+  CategoriesList(this.listOfCategories);
+
   Settings _settingOptions =
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
-  Future<List<Categories>> listOfCategories = categoriesList();
 
   @override
   Widget build(BuildContext context) {
@@ -41,11 +45,17 @@ class CategoriesList extends StatelessWidget {
               actions: <Widget>[
                 FlatButton(
                   onPressed: () => Navigator.of(_context).pop(false),
-                  child: Text(_customLanguage['text_no'],style: TextStyle(color:Colors.redAccent),),
+                  child: Text(
+                    _customLanguage['text_no'],
+                    style: TextStyle(color: Colors.redAccent),
+                  ),
                 ),
                 FlatButton(
                   onPressed: () => Navigator.of(_context).pop(true),
-                  child: Text(_customLanguage['text_yes'],style: TextStyle(color: Colors.green),),
+                  child: Text(
+                    _customLanguage['text_yes'],
+                    style: TextStyle(color: Colors.green),
+                  ),
                 ),
               ],
             ),
@@ -63,71 +73,64 @@ class CategoriesList extends StatelessWidget {
           appBar: AppBar(
             title: Text(_customLanguage['appbar_categories']),
           ),
-          body: FutureBuilder<List<Categories>>(
-            future: listOfCategories,
-            builder: (context, snapshot) {
-              List<Categories> list = snapshot.data ?? [];
-              return ListView.builder(
-                itemCount: list.length,
-                itemBuilder: (context, index) {
-                  Categories item = list[index];
-                  return Container(
-                    height: customImageSize,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: InkWell(
-                            onTap: () {
-                              CategorySingleton.getInstance().saveCatId(
-                                list[index].id_cat,
-                              );
-                              navigatorPages(context);
-                            },
-                            child: Row(
-                              children: <Widget>[
-                                Padding(
-                                  padding: const EdgeInsetsDirectional.only(
-                                      top: 4.0, start: 8.0, end: 8.0),
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                      color: Theme.of(context).primaryColor,
-                                      shape: BoxShape.circle,
-                                      image: DecorationImage(
-                                          image: ExactAssetImage(
-                                            "assets/images/cat_list/cat-$index.png",
-                                          ),
-                                          fit: BoxFit.cover),
-                                    ),
-                                    width: customImageSize,
-                                    height: customImageSize,
-                                  ),
+          body: ListView.builder(
+            itemCount: listOfCategories.length,
+            itemBuilder: (context, index) {
+              Categories item = listOfCategories[index];
+              return Container(
+                height: customImageSize,
+                child: Column(
+                  children: <Widget>[
+                    Expanded(
+                      child: InkWell(
+                        onTap: () {
+                          CategorySingleton.getInstance().saveCatId(
+                            listOfCategories[index].id_cat,
+                          );
+                          navigatorPages(context,listOfCategories[index].id_lang ,listOfCategories[index].id_cat );
+                        },
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                              padding: const EdgeInsetsDirectional.only(
+                                  top: 4.0, start: 8.0, end: 8.0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                  color: Theme.of(context).primaryColor,
+                                  shape: BoxShape.circle,
+                                  image: DecorationImage(
+                                      image: ExactAssetImage(
+                                        "assets/images/cat_list/cat-$index.png",
+                                      ),
+                                      fit: BoxFit.cover),
                                 ),
-                                Text(
-                                  item.cat_name,
-                                  style:
-                                      TextStyle(fontSize: customImageSize / 6),
-                                ),
-                                Spacer(),
-                                Icon(Icons.arrow_forward_ios),
-                              ],
+                                width: customImageSize,
+                                height: customImageSize,
+                              ),
                             ),
-                          ),
+                            Text(
+                              item.cat_name,
+                              style: TextStyle(fontSize: customImageSize / 6),
+                            ),
+                            Spacer(),
+                            Icon(Icons.arrow_forward_ios),
+                          ],
                         ),
-                        Padding(
-                          padding: EdgeInsetsDirectional.only(
-                              top: 0.0,
-                              start: 8.0 * 2 + (customImageSize),
-                              end: 0.0),
-                          child: Divider(
-                            height: 1.0,
-                            color: Theme.of(context).dividerColor,
-                            thickness: 1.0,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  );
-                },
+                    Padding(
+                      padding: EdgeInsetsDirectional.only(
+                          top: 0.0,
+                          start: 8.0 * 2 + (customImageSize),
+                          end: 0.0),
+                      child: Divider(
+                        height: 1.0,
+                        color: Theme.of(context).dividerColor,
+                        thickness: 1.0,
+                      ),
+                    ),
+                  ],
+                ),
               );
             },
           ),
@@ -137,14 +140,11 @@ class CategoriesList extends StatelessWidget {
   }
 }
 
-Future<List<Categories>> categoriesList() async {
-  Settings _settingOptions =
-      Settings.fromMap(SettingOptions.getInstance().loadSettings());
-  List<Categories> _listOfCategories =
-      await DbHelper.getInstance().getCategoriesData(_settingOptions.id_lang);
-  return _listOfCategories;
+Future navigatorPages(context,_idLang, _catID) async{
+  List<Exercises> _getExerciseList;
+  _getExerciseList= await DbHelper.getInstance()
+      .getExercisesData(_idLang, _catID);
+
+  await Navigator.push(
+      context, MaterialPageRoute(builder: (context) => ExercisesList(_getExerciseList)));
 }
-void navigatorPages(context) {
-    Navigator.push(
-        context, MaterialPageRoute(builder: (context) => ExercisesList()));
-  }

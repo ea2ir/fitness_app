@@ -38,10 +38,10 @@ class Introduction extends StatelessWidget {
     );
   }
 
-  Future navigatorPages(BuildContext context) async {
-    Navigator.pushReplacement(
-        context, MaterialPageRoute(builder: (context) => SelectTheme()));
-  }
+//  Future navigatorPages(BuildContext context) async {
+//    Navigator.pushReplacement(
+//        context, MaterialPageRoute(builder: (context) => SelectTheme()));
+//  }
 
 //  List<Container> pages(BuildContext context) {
 //    final TextStyle _lightTextStyleSmall = TextStyle(

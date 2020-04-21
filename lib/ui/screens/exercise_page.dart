@@ -1,5 +1,4 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:fitnessapp/models/exercise_item.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
@@ -11,7 +10,7 @@ import 'package:flutter_swiper/flutter_swiper.dart';
 class ExercisePage extends StatefulWidget {
   List<ExerciseItem> selectedExercise;
 
-  ExercisePage({Key key, @required this.selectedExercise}) : super(key: key);
+  ExercisePage(this.selectedExercise);
 
   @override
   _ExercisePageState createState() => _ExercisePageState();
@@ -138,7 +137,6 @@ class _ExercisePageState extends State<ExercisePage> {
   }
 }
 slider(ExerciseItem _selectedExercise) {
-  print("xdx ::: ${_selectedExercise.qty_photos}");
   return Container(
     height: 200,
     child: new Swiper(

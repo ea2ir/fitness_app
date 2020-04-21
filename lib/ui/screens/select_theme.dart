@@ -1,6 +1,7 @@
 import 'package:fitnessapp/blocs/themes/theme_bloc.dart';
 import 'package:fitnessapp/db/db_helper.dart';
 import 'package:fitnessapp/enums/app_themes.dart';
+import 'package:fitnessapp/models/categories.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/models/themes.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
@@ -11,9 +12,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SelectTheme extends StatelessWidget {
-  Future<List<Themes>> listOfThemes;
+  final List<Themes> listOfThemes;
 
-  SelectTheme({this.listOfThemes});
+  SelectTheme(this.listOfThemes);
 
   Settings _settingOptions =
       Settings.fromMap(SettingOptions.getInstance().loadSettings());
@@ -41,42 +42,36 @@ class SelectTheme extends StatelessWidget {
                   _settingOptions.id_lang,
                   _settingOptions.theme_name,
                 );
-                await navigatorPages(context);
+                await navigatorPages(context, _settingOptions.id_lang);
               },
               icon: Icon(Icons.check_circle),
               color: Theme.of(context).accentColor,
             ),
           ],
         ),
-        body: FutureBuilder<List<Themes>>(
-          future: listOfThemes,
-          builder: (context, snapshot) {
-            List<Themes> _list = snapshot.data ?? [];
-            return ListView.builder(
-              itemCount: _list.length,
-              padding: EdgeInsets.all(8.0),
-              itemBuilder: (context, index) {
-                final itemAppTheme = AppTheme.values[index];
-                return Card(
-                  color: appThemeData[itemAppTheme].primaryColor,
-                  child: ListTile(
-                      title: Text(
-                        '${_list[index].theme_name}',
-                        style: appThemeData[itemAppTheme].textTheme.body1,
-                      ),
-                      onTap: () {
-                        SettingOptions.getInstance().saveSettings({
-                          'lang_name': '${_settingOptions.lang_name}',
-                          'id_theme': '${_list[index].id_theme}',
-                          'lang_type': '${_settingOptions.lang_type}',
-                          'id_lang': '${_settingOptions.id_lang}',
-                          'theme_name': '${_list[index].theme_name}',
-                        });
-                        BlocProvider.of<ThemeBloc>(context)
-                            .add(ThemeChanged(theme: itemAppTheme));
-                      }),
-                );
-              },
+        body: ListView.builder(
+          itemCount: listOfThemes.length,
+          padding: EdgeInsets.all(8.0),
+          itemBuilder: (context, index) {
+            final itemAppTheme = AppTheme.values[index];
+            return Card(
+              color: appThemeData[itemAppTheme].primaryColor,
+              child: ListTile(
+                  title: Text(
+                    '${listOfThemes[index].theme_name}',
+                    style: appThemeData[itemAppTheme].textTheme.body1,
+                  ),
+                  onTap: () {
+                    SettingOptions.getInstance().saveSettings({
+                      'lang_name': '${_settingOptions.lang_name}',
+                      'id_theme': '${listOfThemes[index].id_theme}',
+                      'lang_type': '${_settingOptions.lang_type}',
+                      'id_lang': '${_settingOptions.id_lang}',
+                      'theme_name': '${listOfThemes[index].theme_name}',
+                    });
+                    BlocProvider.of<ThemeBloc>(context)
+                        .add(ThemeChanged(theme: itemAppTheme));
+                  }),
             );
           },
         ),
@@ -84,7 +79,6 @@ class SelectTheme extends StatelessWidget {
     );
   }
 }
-
 
 changeTheme(
   _languageName,
@@ -98,7 +92,9 @@ changeTheme(
   await DbHelper.getInstance().updateSettings(_settings);
 }
 
-Future navigatorPages(BuildContext context) async {
-  Navigator.pushReplacement(
-      context, MaterialPageRoute(builder: (context) => CategoriesList()));
+Future navigatorPages(BuildContext context, String _idLang) async {
+  List<Categories> _getCategories =
+      await DbHelper.getInstance().getCategoriesData(_idLang);
+  await Navigator.pushReplacement(context,
+      MaterialPageRoute(builder: (context) => CategoriesList(_getCategories)));
 }

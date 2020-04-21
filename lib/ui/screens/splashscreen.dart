@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:fitnessapp/blocs/themes/theme_bloc.dart';
 import 'package:fitnessapp/db/db_helper.dart';
 import 'package:fitnessapp/enums/app_themes.dart';
+import 'package:fitnessapp/models/categories.dart';
+import 'package:fitnessapp/models/languages.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
 import 'package:fitnessapp/resources/setting_options.dart';
@@ -13,22 +15,27 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SplashScreen extends StatelessWidget {
   String _themeId;
+  String _idLang;
 
   @override
   Widget build(BuildContext context) {
     databaseActions(context);
 
     Map<String, String> _customLanguage =
-        CustomString.getInstance().selectLanguage("");
+    CustomString.getInstance().selectLanguage("");
 
     return Scaffold(
       body: Container(
-        color: Theme.of(context).primaryColor,
+        color: Theme
+            .of(context)
+            .primaryColor,
         child: Center(
           child: Text(
             _customLanguage['appbar_splashscreen'],
             style: TextStyle(
-                fontSize: 30.0, color: Theme.of(context).primaryColorDark),
+                fontSize: 30.0, color: Theme
+                .of(context)
+                .primaryColorDark),
           ),
         ),
       ),
@@ -36,21 +43,36 @@ class SplashScreen extends StatelessWidget {
   }
 
   Future databaseActions(context) async {
-    await DbHelper.getInstance().db;
-    await DbHelper.getInstance().openDB;
+    await DbHelper
+        .getInstance()
+        .db;
+    await DbHelper
+        .getInstance()
+        .openDB;
     await checkSettings(context);
     await navigatorPages(context);
   }
 
   Future navigatorPages(context) async {
     if (_themeId == "-1") {
-      sleepTimer(5000);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => SelectLanguage()));
+      List<Languages> _getLanguages;
+      _getLanguages =
+      await DbHelper.getInstance().getLanguageData();
+
+      await sleepTimer(5000);
+     await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => SelectLanguage(_getLanguages)));
     } else {
-      sleepTimer(5000);
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => CategoriesList()));
+      List<Categories> _getCategories;
+      _getCategories =
+      await DbHelper.getInstance().getCategoriesData(_idLang);
+      await sleepTimer(5000);
+      await Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+              builder: (context) => CategoriesList(_getCategories)));
     }
   }
 
@@ -67,6 +89,7 @@ class SplashScreen extends StatelessWidget {
     });
 
     _themeId = _settings[0].id_theme;
+    _idLang = _settings[0].id_lang;
 
     detectAndSetTheme(context, _themeId);
   }

@@ -103,9 +103,9 @@ class DbHelper {
       whereArgs: [setting.id_setting],
     );
   }
-  Future<List<Categories>> getCategoriesData(String _selectedCategoriesId) async {
+  Future<List<Categories>> getCategoriesData(String _idLang) async {
     var dbClient = await _dbExist;
-    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_CATEGORIES WHERE id_lang=$_selectedCategoriesId");
+    List<Map> maps = await dbClient.rawQuery("SELECT * FROM $_TBL_CATEGORIES WHERE id_lang=$_idLang");
     List<Categories> _categories = [];
     if (maps.length > 0) {
       for (int i = 0; i < maps.length; ++i) {
