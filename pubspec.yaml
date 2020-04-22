@@ -27,6 +27,7 @@ dependencies:
   path_provider: ^1.6.5
   shared_preferences: ^0.5.6+3
   flutter_swiper: ^1.1.6
+  liquid_swipe: ^1.4.1
   carousel_slider: ^2.0.0
 
   # The following adds the Cupertino Icons font to your application.

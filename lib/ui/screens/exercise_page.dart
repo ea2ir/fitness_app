@@ -1,4 +1,3 @@
-
 import 'package:fitnessapp/models/exercise_item.dart';
 import 'package:fitnessapp/models/settings.dart';
 import 'package:fitnessapp/resources/custom_string.dart';
@@ -64,7 +63,8 @@ class _ExercisePageState extends State<ExercisePage> {
                                     start: customImageSize / 12,
                                     end: customImageSize / 12),
                                 scrollDirection: Axis.horizontal,
-                                itemCount: int.parse(_selectedExercise.qty_photos),
+                                itemCount:
+                                    int.parse(_selectedExercise.qty_photos),
                                 itemBuilder: (context, index) {
                                   return Padding(
                                     padding: EdgeInsetsDirectional.only(
@@ -72,6 +72,9 @@ class _ExercisePageState extends State<ExercisePage> {
                                         end: customImageSize / 12),
                                     child: Container(
                                       decoration: BoxDecoration(
+                                        border: Border.all(
+                                            color:
+                                                Theme.of(context).accentColor),
                                         color: Theme.of(context).primaryColor,
                                         shape: BoxShape.circle,
                                         image: DecorationImage(
@@ -112,7 +115,7 @@ class _ExercisePageState extends State<ExercisePage> {
                       ),
                     )
                   : Container(
-                     child: slider(_selectedExercise),
+                      child: slider(context, _selectedExercise),
                     ),
             ),
             Align(
@@ -123,10 +126,30 @@ class _ExercisePageState extends State<ExercisePage> {
                     isPressInformationIcon = !isPressInformationIcon;
                   });
                 },
-                child: Icon(
-                  isPressInformationIcon ? Icons.info : Icons.info_outline,
-                  color: Theme.of(context).primaryColor,
-                  size: _bodyHeight * 0.05,
+                child: Row(
+                  textDirection: (_settingOptions.lang_type == "RTL"
+                      ? TextDirection.rtl
+                      : TextDirection.ltr),
+                  children: <Widget>[
+                    Icon(
+                      isPressInformationIcon ? Icons.info : Icons.info_outline,
+                      color: Theme.of(context).primaryColor,
+                      size: _bodyHeight * 0.05,
+                    ),
+                    Text(
+                      isPressInformationIcon
+                          ? _customLanguage['text_exercise_photos']
+                          : _customLanguage['text_exercise_description'],
+                      style: TextStyle(
+                          fontSize: Theme.of(context)
+                              .textTheme
+                              .title
+                              .fontSize-(Theme.of(context)
+                              .textTheme
+                              .title
+                              .fontSize/4).round()),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -136,7 +159,8 @@ class _ExercisePageState extends State<ExercisePage> {
     );
   }
 }
-slider(ExerciseItem _selectedExercise) {
+
+slider(context, ExerciseItem _selectedExercise) {
   return Container(
     height: 200,
     child: new Swiper(
@@ -144,7 +168,7 @@ slider(ExerciseItem _selectedExercise) {
       itemBuilder: (BuildContext context, int index) {
         return Align(
           child: new Image.asset(
-              "assets/images/exercises/exercise-${_selectedExercise.id_exercise}-${index+1}.png",
+            "assets/images/exercises/exercise-${_selectedExercise.id_exercise}-${index + 1}.png",
             fit: BoxFit.fill,
             width: double.infinity,
           ),
@@ -153,11 +177,11 @@ slider(ExerciseItem _selectedExercise) {
       itemCount: int.parse(_selectedExercise.qty_photos),
       pagination: new SwiperPagination(
         margin: EdgeInsets.only(top: 10, bottom: 12.0),
-        builder: const DotSwiperPaginationBuilder(
-            activeColor: Colors.white,
-            color: Colors.white30,
+        builder: DotSwiperPaginationBuilder(
+            activeColor: Theme.of(context).accentColor,
+            color: Theme.of(context).primaryColor,
             size: 8.0,
-            activeSize: 8.0,
+            activeSize: 16.0,
             space: 4.0),
       ),
     ),
