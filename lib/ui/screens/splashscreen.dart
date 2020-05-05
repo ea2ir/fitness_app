@@ -19,23 +19,32 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    databaseActions(context);
+    double _widthScreen = MediaQuery.of(context).size.width;
+    double _heightScreen = MediaQuery.of(context).size.height;
 
-    Map<String, String> _customLanguage =
-    CustomString.getInstance().selectLanguage("");
+   databaseActions(context);
+
 
     return Scaffold(
       body: Container(
-        color: Theme
-            .of(context)
-            .primaryColor,
+        width: double.infinity,
+        color: Theme.of(context).primaryColor,
         child: Center(
-          child: Text(
-            _customLanguage['appbar_splashscreen'],
-            style: TextStyle(
-                fontSize: 30.0, color: Theme
-                .of(context)
-                .primaryColorDark),
+          child: Container(
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              image: DecorationImage(
+                  image: ExactAssetImage("assets/images/logo/Logo.png"),
+                  fit: BoxFit.cover),
+            ),
+            width: _widthScreen <
+                       _heightScreen
+                ? _widthScreen / 2
+                : _heightScreen / 2,
+            height:  _widthScreen <
+                         _heightScreen
+                     ? _widthScreen / 2
+                     : _heightScreen / 2,
           ),
         ),
       ),
@@ -43,12 +52,8 @@ class SplashScreen extends StatelessWidget {
   }
 
   Future databaseActions(context) async {
-    await DbHelper
-        .getInstance()
-        .db;
-    await DbHelper
-        .getInstance()
-        .openDB;
+    await DbHelper.getInstance().db;
+    await DbHelper.getInstance().openDB;
     await checkSettings(context);
     await navigatorPages(context);
   }
@@ -56,19 +61,22 @@ class SplashScreen extends StatelessWidget {
   Future navigatorPages(context) async {
     if (_themeId == "-1") {
       List<Languages> _getLanguages;
-      _getLanguages =
-      await DbHelper.getInstance().getLanguageData();
+      _getLanguages = await DbHelper.getInstance().getLanguageData();
+      await detectAndSetTheme(context, _themeId);
 
       await sleepTimer(5000);
-     await Navigator.pushReplacement(
+
+      await Navigator.pushReplacement(
           context,
           MaterialPageRoute(
               builder: (context) => SelectLanguage(_getLanguages)));
     } else {
       List<Categories> _getCategories;
-      _getCategories =
-      await DbHelper.getInstance().getCategoriesData(_idLang);
+      _getCategories = await DbHelper.getInstance().getCategoriesData(_idLang);
+      await detectAndSetTheme(context, _themeId);
+
       await sleepTimer(5000);
+
       await Navigator.pushReplacement(
           context,
           MaterialPageRoute(
@@ -91,7 +99,6 @@ class SplashScreen extends StatelessWidget {
     _themeId = _settings[0].id_theme;
     _idLang = _settings[0].id_lang;
 
-    detectAndSetTheme(context, _themeId);
   }
 
   sleepTimer(intervalTime) {
@@ -99,7 +106,7 @@ class SplashScreen extends StatelessWidget {
   }
 }
 
-void detectAndSetTheme(_context, _themeId) {
+detectAndSetTheme(_context, _themeId) {
   switch (_themeId) {
     case "1":
       {
@@ -139,8 +146,6 @@ void detectAndSetTheme(_context, _themeId) {
       break;
     default:
       {
-        BlocProvider.of<ThemeBloc>(_context)
-            .add(ThemeChanged(theme: AppTheme.values[5]));
       }
   }
 }

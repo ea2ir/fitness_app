@@ -54,7 +54,7 @@ class CustomString {
             'text_yes': 'Yes',
             'text_no': 'No',
             'introduction_exit': 'Exit',
-            'text_exercise_description': 'Show Exercise Descriptions',
+            'text_exercise_description': 'Show Exercise Description\'s',
             'text_exercise_photos': 'Show Photo\'s',
             'introduction_text_1': '\n Page One \n Introdution Feautures Of Application.',
             'introduction_text_2': '\n Page Two \n Introdution Feautures Of Application.',
