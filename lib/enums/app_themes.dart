@@ -61,7 +61,7 @@ final appThemeData = {
     cursorColor: Colors.cyanAccent,
     dividerColor: Colors.white,
     disabledColor: Colors.grey,
-    splashColor: Colors.deepPurple,
+    splashColor: Colors.deepPurple[700],
   ),
   AppTheme.RedDark:
   ThemeData(
